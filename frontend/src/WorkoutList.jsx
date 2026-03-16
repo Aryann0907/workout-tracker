@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const API_URL = "https://workout-tracker-3.onrender.com";
+
 const WorkoutList = ({ refresh, onEdit }) => {
   const [workouts, setWorkouts] = useState([]);
 
   const fetchWorkouts = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/workouts");
+      const response = await axios.get(`${API_URL}/workouts`);
       setWorkouts(response.data);
     } catch (error) {
       console.error("Error fetching workouts:", error);
@@ -19,7 +21,7 @@ const WorkoutList = ({ refresh, onEdit }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/workouts/${id}`);
+      await axios.delete(`${API_URL}/workouts/${id}`);
       fetchWorkouts();
     } catch (error) {
       console.error("Error deleting workout:", error);
@@ -29,6 +31,7 @@ const WorkoutList = ({ refresh, onEdit }) => {
   return (
     <div>
       <h2>Workout History</h2>
+
       {workouts.length === 0 ? (
         <p>No workouts yet.</p>
       ) : (
@@ -43,6 +46,7 @@ const WorkoutList = ({ refresh, onEdit }) => {
               <th>Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {workouts.map((w) => (
               <tr key={w.id}>

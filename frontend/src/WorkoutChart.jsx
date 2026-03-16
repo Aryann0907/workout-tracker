@@ -23,31 +23,31 @@ const colors = [
   "rgba(255,159,64,1)",
 ];
 
+const API_URL = "https://workout-tracker-3.onrender.com";
+
 const WorkoutChart = () => {
   const [chartData, setChartData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/workouts");
+        const response = await axios.get(`${API_URL}/workouts`);
         const workouts = response.data;
 
-        // Group workouts by exercise_name
         const exercises = {};
         workouts.forEach((w) => {
           if (!exercises[w.exercise_name]) exercises[w.exercise_name] = [];
           exercises[w.exercise_name].push(w);
         });
 
-        // Get all unique dates
         const allDates = Array.from(new Set(workouts.map((w) => w.date))).sort();
 
-        // Prepare datasets
         const datasets = Object.keys(exercises).map((exercise, idx) => {
           const data = allDates.map((date) => {
             const workout = exercises[exercise].find((w) => w.date === date);
             return workout ? workout.weight : null;
           });
+
           return {
             label: exercise,
             data,
@@ -61,6 +61,7 @@ const WorkoutChart = () => {
           labels: allDates,
           datasets,
         });
+
       } catch (error) {
         console.error("Error fetching workouts for chart:", error);
       }

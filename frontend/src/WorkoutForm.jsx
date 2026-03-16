@@ -8,6 +8,8 @@ const WorkoutForm = ({ onWorkoutAdded, editWorkout, clearEdit }) => {
   const [weight, setWeight] = useState("");
   const [date, setDate] = useState("");
 
+  const API_URL = "https://workout-tracker-3.onrender.com";
+
   useEffect(() => {
     if (editWorkout) {
       setExerciseName(editWorkout.exercise_name);
@@ -22,23 +24,26 @@ const WorkoutForm = ({ onWorkoutAdded, editWorkout, clearEdit }) => {
     e.preventDefault();
     try {
       if (editWorkout) {
-        await axios.put(`http://localhost:3001/workouts/${editWorkout.id}`, {
+        await axios.put(`${API_URL}/workouts/${editWorkout.id}`, {
           exercise_name,
           num_sets: parseInt(num_sets),
           reps: parseInt(reps),
           weight: parseFloat(weight),
           date,
         });
+
         alert("Workout updated!");
         clearEdit();
+
       } else {
-        await axios.post("http://localhost:3001/workouts", {
+        await axios.post(`${API_URL}/workouts`, {
           exercise_name,
           num_sets: parseInt(num_sets),
           reps: parseInt(reps),
           weight: parseFloat(weight),
           date,
         });
+
         alert("Workout added!");
       }
 
@@ -49,6 +54,7 @@ const WorkoutForm = ({ onWorkoutAdded, editWorkout, clearEdit }) => {
       setReps("");
       setWeight("");
       setDate("");
+
     } catch (error) {
       console.error("Error saving workout:", error);
       alert("Failed to save workout");
@@ -91,7 +97,9 @@ const WorkoutForm = ({ onWorkoutAdded, editWorkout, clearEdit }) => {
         onChange={(e) => setDate(e.target.value)}
         required
       />
-      <button type="submit">{editWorkout ? "Update Workout" : "Add Workout"}</button>
+      <button type="submit">
+        {editWorkout ? "Update Workout" : "Add Workout"}
+      </button>
     </form>
   );
 };
